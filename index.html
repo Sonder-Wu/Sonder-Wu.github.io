@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            /* 字体无法选中 */
+            user-select: none;
+        }
+
+        body {
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 12px;
+            background-image: linear-gradient(-225deg, #5323ff 0%,
+                    #fff1ff 29%, #86bbf8e0 100%);
+            color: #a0a5a8; 
+        }
+        /*导航栏*/
+#nav {
+    position: absolute;
+    border: none;
+    border-radius: 10em;
+    display: flex;
+    list-style: none;
+    background: #ecf0f3;
+    box-shadow: 20px 40px 40px #00000033;
+    padding: 10px;
+    top: 40px;
+    left: 620px;
+}
+
+#nav li a {
+    position: relative;
+    padding: 15px 50px;
+    font: 500 24px '优设标题黑';
+    border: none;
+    outline: none;
+    color: rgb(70, 100, 180);
+    display: inline-block;
+    text-decoration: none;
+    z-index: 3;
+}
+
+.slide1,
+.slide2 {
+    position: absolute;
+    display: inline-block;
+    height: 60px;
+    border-radius: 10em;
+    transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1.05);
+}
+
+.slide1 {
+    background-color: rgb(170, 190, 255);
+    z-index: 2;
+}
+
+.slide2 {
+    opacity: 0;
+    background-color: rgba(170, 190, 255, .5);
+    z-index: 1;
+    box-shadow: 0 0 20px #ffffffaa inset;
+}
+
+.squeeze {
+    transform: scale(0.9);
+}
+
+canvas {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+}
+.shell {
+    position: relative;
+    width: 1000px;
+    min-width: 1000px;
+    min-height: 600px;
+    height: 600px;
+    padding: 25px;
+    background-color: #ecf0f3;
+    box-shadow: 10px 10px 10px #b3b3b3, -10px -10px 10px #f9f9f9;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+/* 设置响应式 */
+@media (max-width: 1200px) {
+    .shell {
+        transform: scale(0.7);
+    }
+}
+
+@media (max-width: 1000px) {
+    .shell {
+        transform: scale(0.6);
+    }
+}
+
+@media (max-width: 800px) {
+    .shell {
+        transform: scale(0.5);
+    }
+}
+
+@media (max-width: 600px) {
+    .shell {
+        transform: scale(0.4);
+    }
+}
+
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 0;
+    width: 600px;
+    height: 100%;
+    padding: 25px;
+    background-color: #ecf0f3;
+    transition: 1.25s;
+}
+
+.form {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+}
+
+.iconfont {
+    margin: 0 5px;
+    border: rgba(0, 0, 0, 0.5) 2px solid;
+    border-radius: 50%;
+    font-size: 25px;
+    padding: 3px;
+    opacity: 0.5;
+    transition: 0.1s;
+}
+
+.iconfont:hover {
+    opacity: 1;
+    transition: 0.15s;
+    cursor: pointer;
+}
+
+.form_input {
+    width: 350px;
+    height: 40px;
+    margin: 4px 0;
+    padding-left: 25px;
+    font-size: 13px;
+    letter-spacing: 0.15px;
+    border: none;
+    outline: none;
+    background-color: #ecf0f3;
+    transition: 0.25s ease;
+    border-radius: 8px;
+    box-shadow: inset 2px 2px 4px #d1d9e6, inset -2px -2px 4px #f9f9f9;
+}
+
+.form_input:focus {
+    box-shadow: inset 4px 4px 4px #d1d9e6, inset -4px -4px 4px #f9f9f9;
+}
+
+.form_span {
+    margin-top: 30px;
+    margin-bottom: 12px;
+}
+
+.form_link {
+    color: #181818;
+    font-size: 15px;
+    margin-top: 25px;
+    border-bottom: 1px solid #a0a5a8;
+    line-height: 2;
+}
+
+.title {
+    font-size: 34px;
+    font-weight: 700;
+    line-height: 3;
+    color: #181818;
+    letter-spacing: 10px;
+}
+
+.description {
+    font-size: 14px;
+    letter-spacing: 0.25px;
+    text-align: center;
+    line-height: 1.6;
+}
+
+.button {
+    width: 180px;
+    height: 50px;
+    border-radius: 25px;
+    margin-top: 50px;
+    font-weight: 700;
+    font-size: 14px;
+    letter-spacing: 1.15px;
+    background-color: #4B70E2;
+    color: #f9f9f9;
+    box-shadow: 8px 8px 16px #d1d9e6, -8px -8px 16px #f9f9f9;
+    border: none;
+    outline: none;
+}
+
+.a-container {
+    z-index: 100;
+    left: calc(100% - 600px);
+}
+
+.b-container {
+    left: calc(100% - 600px);
+    z-index: 0;
+}
+
+.switch {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 400px;
+    padding: 50px;
+    z-index: 200;
+    transition: 1.25s;
+    background-color: #ecf0f3;
+    overflow: hidden;
+    box-shadow: 4px 4px 10px #d1d9e6, -4px -4px 10px #d1d9e6;
+}
+
+.switch_circle {
+    position: absolute;
+    width: 500px;
+    height: 500px;
+    border-radius: 50%;
+    background-color: #ecf0f3;
+    box-shadow: inset 8px 8px 12px #b8bec7, inset -8px -8px 12px #fff;
+    bottom: -60%;
+    left: -60%;
+    transition: 1.25s;
+}
+
+.switch_circle-t {
+    top: -30%;
+    left: 60%;
+    width: 300px;
+    height: 300px;
+}
+
+.switch_container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    position: absolute;
+    width: 400px;
+    padding: 50px 55px;
+    transition: 1.25s;
+}
+
+.switch_button {
+    cursor: pointer;
+}
+
+.switch_button:hover,
+.submit:hover {
+    box-shadow: 6px 6px 10px #d1d9e6, -6px -6px 10px #f9f9f9;
+    transform: scale(0.985);
+    transition: 0.25s;
+}
+
+.switch_button:active,
+.switch_button:focus {
+    box-shadow: 2px 2px 6px #d1d9e6, -2px -2px 6px #f9f9f9;
+    transform: scale(0.97);
+    transition: 0.25s;
+}
+
+.is-txr {
+    left: calc(100% - 400px);
+    transition: 1.25s;
+    transform-origin: left;
+}
+
+.is-txl {
+    left: 0;
+    transition: 1.25s;
+    transform-origin: right;
+}
+
+.is-z {
+    z-index: 200;
+    transition: 1.25s;
+}
+
+.is-hidden {
+    visibility: hidden;
+    opacity: 0;
+    position: absolute;
+    transition: 1.25s;
+}
+
+.is-gx {
+    animation: is-gx 1.25s;
+}
+
+@keyframes is-gx {
+
+    0%,
+    10%,
+    100% {
+        width: 400px;
+    }
+
+    30%,
+    50% {
+        width: 500px;
+    }
+}
+
+    </style>
+</head>
+
+<body>
+    <canvas></canvas>
+        <ul id="nav">
+            <li class="slide1"></li>
+            <li class="slide2"></li>
+            <li><a href="#">登录</a></li>
+            <li><a href="#">帮助</a></li>
+            <li><a href="#">协议</a></li>
+            <li><a href="#">管理</a></li>
+        </ul>
+    <div class="shell">
+        
+        <div class="container a-container" id="a-container">
+            <form action="" method="" class="form" id="a-form">
+                <h2 class="form_title title">创建账号</h2>
+                <!-- <div class="form_icons">
+                    <i class="iconfont icon-QQ"></i>
+                    <i class="iconfont icon-weixin"></i>
+                    <i class="iconfont icon-bilibili-line"></i>
+                </div> -->
+                <span class="form_span">选择注册方式以电话方式注册</span>
+                <input type="text" class="form_input" placeholder="UserName">
+                <input type="text" class="form_input" placeholder="Phone">
+                <input type="text" class="form_input" placeholder="Password">
+                <button class="form_button button submit" name="sign_up">SIGN UP</button>
+            </form>
+        </div>
+
+        <div class="container b-container" id="b-container">
+            <form action="" method="" class="form" id="b-form">
+                <h2 class="form_title title">登入账号</h2>
+                <!-- <div class="form_icons">
+                    <i class="iconfont icon-QQ"></i>
+                    <i class="iconfont icon-weixin"></i>
+                    <i class="iconfont icon-bilibili-line"></i>
+                </div> -->
+                <span class="form_span">选择登录方式以电话方式登录</span>
+                <input type="text" class="form_input" placeholder="UserName" name="user">
+                <input type="text" class="form_input" placeholder="Password" name="pass">
+                
+                <a class="form_link">忘记密码？</a>
+                <button class="form_button button submit" name="sign_in">SIGN IN</button>
+            </form>
+        </div>
+
+        <div class="switch" id="switch-cnt">
+            <div class="switch_circle"></div>
+            <div class="switch_circle switch_circle-t"></div>
+            <div class="switch_container" id="switch-c1">
+                <h2 class="switch_title title" style="letter-spacing: 0;">Welcome Back！</h2>
+                <p class="switch_description description">已经有账号了嘛，去登入账号来进入系统吧！！！</p>
+                <button class="switch_button button switch-btn">SIGN IN</button>
+            </div>
+
+            <div class="switch_container is-hidden" id="switch-c2">
+                <h2 class="switch_title title" style="letter-spacing: 0;">Hello Friend！</h2>
+                <p class="switch_description description">去注册一个账号，成为尊贵的会员，让我们体验不一样的住店体验！</p>
+                <button class="switch_button button switch-btn">SIGN UP</button>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script>
+    const login = document.querySelector('[name=sign_in]')
+function checkLogin() {
+    // 获取用户名和密码的值
+    var username = document.getElementsByName('user')[0].value;
+    var password = document.getElementsByName('pass')[0].value;
+
+    if(username === 'root' && password === 'sa') {
+        
+        window.location.href = 'http://www.baidu.com';
+    } else {
+        
+        alert('用户名或密码错误！');
+    }
+}
+
+login.addEventListener('click', function (e) {
+    e.preventDefault()
+    var username = document.getElementsByName('user')[0].value;
+    var password = document.getElementsByName('pass')[0].value;
+    e.preventDefault()
+    if(username === 'root' && password === 'sa') {
+        
+        location.href = './beatingHeart.html'
+    } else {
+        
+        alert('用户名或密码错误！');
+    }
+})
+$("#nav a").on("click", function () {
+    var position = $(this).parent().position();
+    var width = $(this).parent().width();
+    $("#nav .slide1").css({ opacity: 1, left: +position.left, width: width });
+});
+$("#nav a").on("mouseover", function () {
+    var position = $(this).parent().position();
+    var width = $(this).parent().width();
+    $("#nav .slide2").css({ opacity: 1, left: +position.left, width: width }).addClass("squeeze");
+});
+$("#nav a").on("mouseout", function () {
+    $("#nav .slide2").css({ opacity: 0 }).removeClass("squeeze");
+});
+var currentWidth = $("#nav li:nth-of-type(3) a").parent("li").width();
+var current = $("li:nth-of-type(3) a").position();
+$("#nav .slide1").css({ left: +current.left, width: currentWidth });
+let switchCtn = document.querySelector("#switch-cnt");
+    let switchC1 = document.querySelector("#switch-c1");
+    let switchC2 = document.querySelector("#switch-c2");
+    let switchCircle = document.querySelectorAll(".switch_circle");
+    let switchBtn = document.querySelectorAll(".switch-btn");
+    let aContainer = document.querySelector("#a-container");
+    let bContainer = document.querySelector("#b-container");
+    let allButtons = document.querySelectorAll(".submit");
+
+    let getButtons = (e) => e.preventDefault()
+    let changeForm = (e) => {
+        // 修改类名
+        switchCtn.classList.add("is-gx");
+        setTimeout(function () {
+            switchCtn.classList.remove("is-gx");
+        }, 1500)
+        switchCtn.classList.toggle("is-txr");
+        switchCircle[0].classList.toggle("is-txr");
+        switchCircle[1].classList.toggle("is-txr");
+
+        switchC1.classList.toggle("is-hidden");
+        switchC2.classList.toggle("is-hidden");
+        aContainer.classList.toggle("is-txl");
+        bContainer.classList.toggle("is-txl");
+        bContainer.classList.toggle("is-z");
+    }
+    // 点击切换
+    let shell = (e) => {
+        for (var i = 0; i < allButtons.length; i++)
+            allButtons[i].addEventListener("click", getButtons);
+        for (var i = 0; i < switchBtn.length; i++)
+            switchBtn[i].addEventListener("click", changeForm)
+    }
+    window.addEventListener("load", shell);
+    const STAR_COLOR = '#fff';
+        const STAR_SIZE = 3;
+        const STAR_MIN_SCALE = 0.2;
+        const OVERFLOW_THRESHOLD = 50;
+        const STAR_COUNT = (window.innerWidth + window.innerHeight) / 8;
+        const canvas = document.querySelector('canvas');
+        const context = canvas.getContext('2d');
+
+        let scale = 1; // device pixel ratio
+        let width;
+        let height;
+        let stars = [];
+        let pointerX;
+        let pointerY;
+        let velocity = { x: 0, y: 0, tx: 0, ty: 0, z: 0.0009 };
+        let touchInput = false;
+
+        generate();
+        resize();
+        step();
+        window.onresize = resize;
+        // 当鼠标在canvas上移动时，更新鼠标指针位置
+        canvas.onmousemove = onMouseMove;
+        // 当触摸屏在canvas上移动时，更新鼠标指针位置
+        canvas.ontouchmove = onTouchMove;
+        // 当触摸屏离开canvas时，更新鼠标指针位置
+        canvas.ontouchend = onMouseLeave;
+        // 当鼠标离开文档时，更新鼠标指针位置
+        document.onmouseleave = onMouseLeave;
+        // 生成星星
+        function generate() {
+            for (let i = 0; i < STAR_COUNT; i++) {
+                stars.push({
+                    x: 0,
+                    y: 0,
+                    z: STAR_MIN_SCALE + Math.random() * (1 - STAR_MIN_SCALE),
+                });
+            }
+        }
+        // 将星星放置到随机位置
+        function placeStar(star) {
+            star.x = Math.random() * width;
+            star.y = Math.random() * height;
+        }
+        // 回收星星并重新放置到新的位置
+        function recycleStar(star) {
+            let direction = 'z';
+            // 获取速度的绝对值
+            let vx = Math.abs(velocity.x);
+            let vy = Math.abs(velocity.y);
+            if (vx > 1 || vy > 1) {
+                let axis;
+                // 如果水平速度大于垂直速度，则根据水平速度的比例随机确定水平或垂直方向
+                if (vx > vy) {
+                    axis = Math.random() < vx / (vx + vy) ? 'h' : 'v';
+                } else {
+                    axis = Math.random() < vy / (vx + vy) ? 'v' : 'h';
+                }
+                // 根据方向确定具体的移动方向
+                if (axis === 'h') {
+                    direction = velocity.x > 0 ? 'l' : 'r';
+                } else {
+                    direction = velocity.y > 0 ? 't' : 'b';
+                }
+            }
+
+            star.z = STAR_MIN_SCALE + Math.random() * (1 - STAR_MIN_SCALE);
+            // 根据方向设置星星的位置
+            if (direction === 'z') {
+                star.z = 0.1;
+                star.x = Math.random() * width;
+                star.y = Math.random() * height;
+            } else if (direction === 'l') {
+                
+                star.x = -OVERFLOW_THRESHOLD;
+                star.y = height * Math.random();
+            } else if (direction === 'r') {
+                
+                star.x = width + OVERFLOW_THRESHOLD;
+                star.y = height * Math.random();
+            } else if (direction === 't') {
+                
+                star.x = width * Math.random();
+                star.y = -OVERFLOW_THRESHOLD;
+            } else if (direction === 'b') {
+                
+                star.x = width * Math.random();
+                star.y = height + OVERFLOW_THRESHOLD;
+            }
+        }
+        // 调整大小
+        function resize() {
+            
+            scale = window.devicePixelRatio || 1;
+            width = window.innerWidth * scale;
+            height = window.innerHeight * scale;
+            canvas.width = width;
+            canvas.height = height;
+            
+            stars.forEach(placeStar);
+        }
+        
+        function step() {
+            
+            context.clearRect(0, 0, width, height);
+            // 更新星星的位置和速度
+            update();
+            render();
+            requestAnimationFrame(step);
+        }
+        // 更新星星的位置和速度
+        function update() {
+            // 缓动速度
+            velocity.tx *= 0.96;
+            velocity.ty *= 0.96;
+            // 更新速度
+            velocity.x += (velocity.tx - velocity.x) * 0.8;
+            velocity.y += (velocity.ty - velocity.y) * 0.8;
+            
+            stars.forEach((star) => {
+
+                star.x += velocity.x * star.z;
+                star.y += velocity.y * star.z;
+                star.x += (star.x - width / 2) * velocity.z * star.z;
+                star.y += (star.y - height / 2) * velocity.z * star.z;
+                star.z += velocity.z;
+
+                // 如果星星超出屏幕范围，则重新放置到屏幕上
+                if (
+                    star.x < -OVERFLOW_THRESHOLD ||
+                    star.x > width + OVERFLOW_THRESHOLD ||
+                    star.y < -OVERFLOW_THRESHOLD ||
+                    star.y > height + OVERFLOW_THRESHOLD
+                ) {
+                    recycleStar(star);
+                }
+            });
+        }
+        // 绘制星星
+        function render() {
+            // 遍历所有星星
+            stars.forEach((star) => {
+                // 设置绘制星星的样式
+                context.beginPath();
+                context.lineCap = 'round';
+                context.lineWidth = STAR_SIZE * star.z * scale;
+                context.globalAlpha = 0.5 + 0.5 * Math.random();
+                context.strokeStyle = STAR_COLOR;
+                // 绘制星星的路径
+                context.beginPath();
+                context.moveTo(star.x, star.y);
+                // 计算星星的尾巴坐标
+                let tailX = velocity.x * 2;
+                let tailY = velocity.y * 2;
+                
+                if (Math.abs(tailX) < 0.1) tailX = 0.5;
+                if (Math.abs(tailY) < 0.1) tailY = 0.5;
+                // 绘制星星的尾巴
+                context.lineTo(star.x + tailX, star.y + tailY);
+                context.stroke();
+            });
+        }
+        // 移动鼠标指针
+        function movePointer(x, y) {
+            
+            if (typeof pointerX === 'number' && typeof pointerY === 'number') {
+                let ox = x - pointerX;
+                let oy = y - pointerY;
+                velocity.tx = velocity.tx + (ox / 8) * scale * (touchInput ? 1 : -1);
+                velocity.ty = velocity.ty + (oy / 8) * scale * (touchInput ? 1 : -1);
+            }
+            // 更新鼠标指针的位置
+            pointerX = x;
+            pointerY = y;
+        }
+        // 当鼠标在canvas上移动时的事件处理函数
+        function onMouseMove(event) {
+            touchInput = false;
+            //星星跟随鼠标
+            //movePointer(event.clientX, event.clientY);
+        }
+        // 当触摸屏在canvas上移动时的事件处理函数
+        function onTouchMove(event) {
+            touchInput = true;
+            movePointer(event.touches[0].clientX, event.touches[0].clientY, true);
+            event.preventDefault();
+        }
+        // 当鼠标离开canvas时的事件处理函数
+        function onMouseLeave() {
+            pointerX = null;
+            pointerY = null;
+        }
+</script>
+</body>
+
+</html>
